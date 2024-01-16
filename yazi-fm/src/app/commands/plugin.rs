@@ -12,7 +12,7 @@ impl App {
 		};
 
 		if !opt.sync {
-			return self.cx.tasks.plugin_micro(&opt.name);
+			return self.cx.tasks.plugin_micro(&opt.name, opt.args);
 		}
 
 		if LOADED.read().contains_key(&opt.name) {
