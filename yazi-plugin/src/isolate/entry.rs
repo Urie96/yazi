@@ -1,10 +1,10 @@
-use mlua::{ExternalError, ExternalResult, Table, TableExt};
+use mlua::{ExternalError, ExternalResult, MultiValue, Table, TableExt, Value};
 use tokio::runtime::Handle;
 
 use super::slim_lua;
 use crate::LOADED;
 
-pub async fn entry(name: &str) -> mlua::Result<()> {
+pub async fn entry(name: &str, args: Vec<String>) -> mlua::Result<()> {
 	LOADED.ensure(name).await.into_lua_err()?;
 
 	let name = name.to_owned();
@@ -15,8 +15,10 @@ pub async fn entry(name: &str) -> mlua::Result<()> {
 		} else {
 			return Err("unloaded plugin".into_lua_err());
 		};
-
-		Handle::current().block_on(plugin.call_async_method("entry", ()))
+		Handle::current().block_on(plugin.call_async_method(
+			"entry",
+			MultiValue::from_iter(args.iter().map(|v| Value::String(lua.create_string(v).unwrap()))),
+		))
 	})
 	.await
 	.into_lua_err()?

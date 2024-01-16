@@ -1,4 +1,5 @@
 use mlua::Lua;
+use yazi_config::BOOT;
 
 use crate::{bindings, elements};
 
@@ -20,6 +21,10 @@ pub fn slim_lua() -> mlua::Result<Lua> {
 	elements::Rect::install(&lua, &ui)?;
 	elements::Rect::register(&lua)?;
 	lua.globals().set("ui", ui)?;
+
+	if let Ok(b) = std::fs::read(BOOT.config_dir.join("ya.lua")) {
+		lua.load(b).exec().unwrap();
+	}
 
 	Ok(lua)
 }

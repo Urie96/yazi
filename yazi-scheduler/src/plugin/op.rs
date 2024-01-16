@@ -15,4 +15,5 @@ impl PluginOp {
 pub struct PluginOpEntry {
 	pub id:   usize,
 	pub name: String,
+	pub args: Vec<String>,
 }

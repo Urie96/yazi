@@ -145,9 +145,13 @@ impl Tasks {
 		});
 	}
 
-	pub fn plugin_micro(&self, name: &str) { self.scheduler.plugin_micro(name.to_owned()); }
+	pub fn plugin_micro(&self, name: &str, args: Vec<String>) {
+		self.scheduler.plugin_micro(name.to_owned(), args);
+	}
 
-	pub fn plugin_macro(&self, name: &str) { self.scheduler.plugin_macro(name.to_owned()); }
+	pub fn plugin_macro(&self, name: &str, args: Vec<String>) {
+		self.scheduler.plugin_macro(name.to_owned(), args);
+	}
 
 	pub fn preload_paged(&self, paged: &[File], mimetype: &HashMap<Url, String>) {
 		let mut single_tasks = Vec::with_capacity(paged.len());

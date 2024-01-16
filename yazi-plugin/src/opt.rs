@@ -9,6 +9,7 @@ pub struct Opt {
 	pub name: String,
 	pub sync: bool,
 	pub data: OptData,
+	pub args: Vec<String>,
 }
 
 #[derive(Default)]
@@ -30,6 +31,7 @@ impl TryFrom<&Exec> for Opt {
 			name: name.to_owned(),
 			sync: e.named.contains_key("sync"),
 			data: e.take_data().unwrap_or_default(),
+			args: e.args[1..].to_vec(),
 		})
 	}
 }
