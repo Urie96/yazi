@@ -14,6 +14,18 @@ impl Utils {
 		ya.set("gid", lua.create_function(|_, ()| Ok(USERS_CACHE.get_current_gid()))?)?;
 
 		ya.set(
+			"groups",
+			lua.create_function(|lua, ()| {
+				USERS_CACHE
+					.get_user_by_uid(USERS_CACHE.get_current_uid())
+					.unwrap()
+					.groups()
+					.map(|s| lua.create_table_from(s.iter().enumerate().map(|(i, g)| (i, g.gid()))))
+					.transpose()
+			})?,
+		)?;
+
+		ya.set(
 			"user_name",
 			lua.create_function(|lua, uid: Option<u32>| {
 				USERS_CACHE
@@ -37,5 +49,7 @@ impl Utils {
 	}
 
 	#[cfg(windows)]
-	pub(super) fn user(_lua: &Lua, _ya: &Table) -> mlua::Result<()> { Ok(()) }
+	pub(super) fn user(_lua: &Lua, _ya: &Table) -> mlua::Result<()> {
+		Ok(())
+	}
 }
